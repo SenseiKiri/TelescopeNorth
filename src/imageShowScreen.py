@@ -5,6 +5,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
 
+from src.propertyHolder import propertyHolder
+
+
 def scheduledImageChange(dt):
     """
     This method will used for schedule showing a new image
@@ -17,6 +20,16 @@ def scheduledNewImageLoader(dt):
     Thid method will be used for schedule to load new images
     """
     mainWidget.createListOfImageWidgets()
+
+
+class TelescopeNorthImage(Image):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.allow_stretch = propertyHolder.isAllowStretch
+        propertyHolder.bind(on_changeAllowStretch=self.changeAllow)
+
+    def changeAllow(self, _instance, allowStretch):
+        self.allow_stretch = allowStretch
 
 
 class ImageShowScreenLayout(BoxLayout):
@@ -36,16 +49,15 @@ class ImageShowScreenLayout(BoxLayout):
         newImageWidgetList = []
         imagePathList = self.getAllImagesFromFolder()
         for imagePath in imagePathList:
-            newImageWidgetList.append(Image(source=imagePath))
+            newImageWidgetList.append(
+                TelescopeNorthImage(source=imagePath, keep_ratio=False))
 
         self.imageWidgetList = newImageWidgetList
 
     def scheduledImageChange(self, dt):
-        print('test')
         self.takeNewPic()
 
     def scheduledNewImageLoader(self, dt):
-        print('test2')
         self.createListOfImageWidgets()
 
     def takeNewPic(self):
@@ -71,7 +83,7 @@ class ImageShowScreenLayout(BoxLayout):
             ./resources/exampleImages/
         :return: List of filepath-strings
         """
-        filePath = './resources/exampleImages/'
+        filePath = propertyHolder.imageFolderDir
         fileGenerator = fileutils.iter_find_files(filePath, patterns=['*.png', '*jpg', '*jpeg'])
         fileList = []
         for file in fileGenerator:
