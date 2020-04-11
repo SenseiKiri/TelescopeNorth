@@ -7,7 +7,7 @@ from src.welcomeScreen import WelcomeScreen
 
 sm = ScreenManager()
 sm.add_widget(WelcomeScreen(screenManager=sm, name='welcomeScreen'))
-sm.add_widget(ImageShowScreen(name='imageShowScreen'))
+sm.add_widget(ImageShowScreen(screenManager=sm, name='imageShowScreen'))
 sm.add_widget(FileChooserScreen(screenManager=sm, name='fileChooserScreen'))
 
 

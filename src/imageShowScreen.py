@@ -4,6 +4,7 @@ from kivy.properties import ObjectProperty
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import Screen
+from kivy.core.window import Window
 
 from src.propertyHolder import propertyHolder
 
@@ -97,3 +98,11 @@ class ImageShowScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.add_widget(ImageShowScreenLayout())
+        Window.bind(on_keyboard=self._on_keyboard_handler)
+
+    def _on_keyboard_handler(self, instance, key, scancode, codepoint, modifiers):
+        print(key)
+        print(modifiers)
+        if key == 8:
+            print('works')
+            self.screenManager.current = 'welcomeScreen'
